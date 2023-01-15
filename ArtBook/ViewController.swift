@@ -7,13 +7,13 @@
 import CoreData
 import UIKit
 
-class ViewController: UIViewController,UITableViewDelegate,UITableViewDataSource
+class ViewController: UIViewController
 {
    
     
 
     
-    var selectedID = 0
+    var selectedID : UUID?
     var names = [String]()
     var id = [UUID]()
     @IBOutlet weak var tableView: UITableView!
@@ -36,23 +36,16 @@ class ViewController: UIViewController,UITableViewDelegate,UITableViewDataSource
    
     
     @objc func addButtonClicked(){
+        self.selectedID = nil
         performSegue(withIdentifier: "toDetailsVC", sender: nil)
     }
     
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell()
-        cell.textLabel?.text = self.names[indexPath.row]
-        
-        return cell
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        self.names.count
-    }
-    
+   
     @objc func getData(){
-        var startIndex = 0
+        self.names.removeAll()
+        self.id.removeAll()
+        
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         let context = appDelegate.persistentContainer.viewContext
         
@@ -72,7 +65,6 @@ class ViewController: UIViewController,UITableViewDelegate,UITableViewDataSource
                 }
                 
                 self.tableView.reloadData()
-                startIndex += 1
             }
             
         }
@@ -83,19 +75,18 @@ class ViewController: UIViewController,UITableViewDelegate,UITableViewDataSource
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let newId = id[indexPath.row] as? Int {
-            self.selectedID = newId
-        }
-        performSegue(withIdentifier: "showSegue", sender: nil)
+        self.selectedID = id[indexPath.row]
+        performSegue(withIdentifier: "toDetailsVC", sender: nil)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "showSegue" {
-            let destination = segue.destination as! ShowViewController
+        if segue.identifier == "toDetailsVC" {
+            let destination = segue.destination as! DetailsViewController
             destination.selectedId = self.selectedID
         }
     }
     
+    //Delete
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             let appDelegate = UIApplication.shared.delegate as! AppDelegate
@@ -128,7 +119,7 @@ class ViewController: UIViewController,UITableViewDelegate,UITableViewDataSource
                     
                 }
             }
-            catch {
+            catch{
                 print("Error while deleting !!")
             }
             
@@ -138,3 +129,19 @@ class ViewController: UIViewController,UITableViewDelegate,UITableViewDataSource
     
 }
 
+extension ViewController: UITableViewDelegate{
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = UITableViewCell()
+        cell.textLabel?.text = self.names[indexPath.row]
+        
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        self.names.count
+    }
+    
+}
+extension ViewController: UITableViewDataSource{
+    
+}
