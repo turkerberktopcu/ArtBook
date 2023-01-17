@@ -13,7 +13,12 @@ class DetailsViewController: UIViewController, UIImagePickerControllerDelegate &
   
     
     var selectedId: UUID?
+    var selectedButtonForMap: String?
+    var coordinateToSave: CLLocationCoordinate2D?
     
+    
+    @IBOutlet weak var pinButton: UIButton!
+    @IBOutlet weak var seeLocationButton: UIButton!
     @IBOutlet weak var saveButton: UIButton!
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var artNameField: UITextField!
@@ -34,7 +39,9 @@ class DetailsViewController: UIViewController, UIImagePickerControllerDelegate &
         if let newId = self.selectedId {
             setData()
         }
-        
+        else{
+            self.seeLocationButton.isHidden = true
+        }
     }
     
  
@@ -66,7 +73,8 @@ class DetailsViewController: UIViewController, UIImagePickerControllerDelegate &
                 artNameField.isUserInteractionEnabled = false
                 imageView.isUserInteractionEnabled = false
                 
-                saveButton.isHidden = true
+                self.saveButton.isHidden = true
+                self.pinButton.isHidden = true
             }
             
         }catch{
@@ -178,7 +186,23 @@ class DetailsViewController: UIViewController, UIImagePickerControllerDelegate &
         }
     }
     
-  
+    @IBAction func seeLocationButton(_ sender: Any) {
+        self.selectedButtonForMap = "see"
+        performSegue(withIdentifier: "toMapView", sender: nil)
+    }
     
+    @IBAction func pinButtonClicked(_ sender: Any) {
+        self.selectedButtonForMap = "pin"
+        performSegue(withIdentifier: "toMapView", sender: nil)
+    }
+    
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "toMapView" {
+            let destination = segue.destination as! MapViewController
+            destination.selectedButton = self.selectedButtonForMap
+            destination.selectedId = self.selectedId
+        }
+    }
 
 }
