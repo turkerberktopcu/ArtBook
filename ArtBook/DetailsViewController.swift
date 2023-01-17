@@ -14,7 +14,7 @@ class DetailsViewController: UIViewController, UIImagePickerControllerDelegate &
     
     var selectedId: UUID?
     var selectedButtonForMap: String?
-    var coordinateToSave: CLLocationCoordinate2D?
+    public static var coordinateToSave: CLLocationCoordinate2D?
     
     
     @IBOutlet weak var pinButton: UIButton!
@@ -160,6 +160,11 @@ class DetailsViewController: UIViewController, UIImagePickerControllerDelegate &
         
         newPainting.setValue(artNameField.text!, forKey: "artName")
         newPainting.setValue(artistNameField.text!, forKey: "artistName")
+        
+        if let locationToSave = DetailsViewController.coordinateToSave {
+            newPainting.setValue(locationToSave.longitude, forKey: "longitude")
+            newPainting.setValue(locationToSave.latitude, forKey: "latitude")
+        }
         
         if let year = Int(yearField.text!) {
             newPainting.setValue(year, forKey: "year")

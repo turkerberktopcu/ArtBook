@@ -116,6 +116,7 @@ class MapViewController: UIViewController {
         if let touchedCoordinate = self.touchedCoordinate {
             let alert = UIAlertController(title: "Saved", message: "Location is saved", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "OK", style: .default) { UIAlertAction in
+                DetailsViewController.coordinateToSave = touchedCoordinate
                 _ = self.navigationController?.popViewController(animated: true)
             })
             
