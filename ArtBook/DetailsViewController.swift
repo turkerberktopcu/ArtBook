@@ -28,7 +28,8 @@ class DetailsViewController: UIViewController, UIImagePickerControllerDelegate &
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Do any additional setup after loading the view.
+       
+        
         let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
         view.addGestureRecognizer(gestureRecognizer)
         
@@ -209,5 +210,26 @@ class DetailsViewController: UIViewController, UIImagePickerControllerDelegate &
             destination.selectedId = self.selectedId
         }
     }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        
+        let userInterfaceStyle = traitCollection.userInterfaceStyle
+      
+        if userInterfaceStyle == .dark {
+            artNameField.backgroundColor = .white
+            artNameField.attributedPlaceholder = NSAttributedString(string: self.artNameField.placeholder!, attributes: [NSAttributedString.Key.foregroundColor: UIColor.black] )
+            artNameField.textColor = .black
+            artistNameField.backgroundColor = .white
+            artistNameField.textColor = .black
+            artistNameField.attributedPlaceholder = NSAttributedString(string: self.artistNameField.placeholder!, attributes: [NSAttributedString.Key.foregroundColor: UIColor.black] )
+            yearField.backgroundColor = .white
+            yearField.textColor = .black
+            yearField.attributedPlaceholder = NSAttributedString(string: self.yearField.placeholder!, attributes: [NSAttributedString.Key.foregroundColor: UIColor.black] )
+            
+        }
+        
+        
+    }
+    
 
 }
